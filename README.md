@@ -1,5 +1,3 @@
-Spring Boot + Spring Security + JWT (including Access and Refresh Tokens)
-
 Hotel Booking - Java with Spring and SPA [Single Page Application] with Angular (hotel-booking-java-spring-angular) is a version of example of web application for Hotel Reservation (Hotel Booking) created on:
 - back end (server side) with Java, Spring, Spring Boot and:
 * Spring Web [build web, including RESTful (API, web services), applications using Spring MVC, uses Apache Tomcat as the default embedded container] 
