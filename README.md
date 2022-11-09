@@ -17,13 +17,13 @@ Clone the repository:
 
 git clone https://github.com/albeisoft/hotel-booking-java-spring-angular.git
 
-Then cd into the folder with this command:
+Then cd into the folder with command:
 
 cd hotel-booking-java-spring-angular/HotelBooking
 
-Open pom.xml file with your IDE: IntelliJ IDEA, Eclipse, NetBeans, Visual Studio Code, etc. 
+Open folder HotelBooking with your IDE: IntelliJ IDEA, Eclipse, NetBeans, Visual Studio Code, etc. 
 
-Then create a database named "hotel_java" and change database autentication data in application.properties file from dir hotel-booking-java-spring-angular\hotel-booking\src\main\resources.
+Then create a database named "hotel_java" and change database autentication data in application.properties file from folder hotel-booking-java-spring-angular\hotel-booking\src\main\resources.
 
 Run (compile) front end scripts
 
