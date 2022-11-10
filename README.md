@@ -1,13 +1,13 @@
 Hotel Booking - Java with Spring and SPA [Single Page Application] with Angular (hotel-booking-java-spring-angular) is a version of example of web application for Hotel Reservation (Hotel Booking) created on:
 - back end (server side) with Java, Spring framework (Java framework), Spring Boot and:
-* Spring Web [build web, including RESTful (API, web services), applications using Spring MVC, uses Apache Tomcat as the default embedded container] 
-* Spring Data JPA [persist data in SQL stores with Java Persistence API using Spring Data and Hibernate]
-* MySQL Driver [MySQL JDBC and R2DBC driver]
-* Spring Security [highly customizable authentication and access-control framework for Spring applications]
-* used JWT [JSON Web Token] and refresh tokens (with Java JWT from auth0 - Java implementation of JSON Web Token) for security autentication and authorization (with roles, etc.)
-* Lombok [Java annotation library which helps to reduce boilerplate code]
-* Validation [Bean Validation with Hibernate validator]
-* Spring Boot DevTools [provides fast application restarts, LiveReload, and configurations for enhanced development experience], etc.)
+> Spring Web [build web, including RESTful (API, web services), applications using Spring MVC, uses Apache Tomcat as the default embedded container] 
+> Spring Data JPA [persist data in SQL stores with Java Persistence API using Spring Data and Hibernate]
+> MySQL Driver [MySQL JDBC and R2DBC driver]
+> Spring Security [highly customizable authentication and access-control framework for Spring applications]
+> used JWT [JSON Web Token] and refresh tokens (with Java JWT from auth0 - Java implementation of JSON Web Token) for security autentication and authorization (with roles, etc.)
+> Lombok [Java annotation library which helps to reduce boilerplate code]
+> Validation [Bean Validation with Hibernate validator]
+> Spring Boot DevTools [provides fast application restarts, LiveReload, and configurations for enhanced development experience], etc.)
 
 Java 19.x, Spring framework 5.x, Spring Boot 2.7.5, Maven, Packaging as Jar
 
