@@ -30,6 +30,10 @@ Then create a database named "hotel_java" and change database autentication data
 
 Run (compile) front end scripts
 
+First install node packages with next command in a terminal from hotel-booking-client-app folder:
+
+npm install
+
 To run Angular application go into folder hotel-booking-client-app and run this command in a Visual Studio (or other IDE: IntelliJ IDEA, etc.) terminal (any change you make to the HTML, CSS, JavaScript, Angular code will be reflected immediately in the page you see in your browser):
 
 ng serve
