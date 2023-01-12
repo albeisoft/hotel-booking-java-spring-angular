@@ -27,7 +27,7 @@ public class Category implements Serializable {
     private Long id;
 
     @NotBlank(message = "Name is required.")
-    @Size(min = 5, max = 100, message = "Name '${validatedValue}' length must be between {min} and {max} characters.")
+    @Size(min = 2, max = 100, message = "Name '${validatedValue}' length must be between {min} and {max} characters.")
     // can set in DB other name of field by using @Column...
     // @Column(name = "Name")
     private String name;
