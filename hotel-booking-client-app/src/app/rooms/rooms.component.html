@@ -1,0 +1,180 @@
+<div class="container" *ngIf="isLoggedIn; else loggedOut">
+  <mat-card class="mat-elevation-z8">
+    <mat-toolbar color="accent" style="box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);">
+      <div align="center" style="text-align: right;">
+        Rooms
+      </div>
+    </mat-toolbar>
+    <br><br>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+        <table>
+          <tr>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="name" matTooltip="Enter Name" matInput placeholder="Name" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('name').value && form.get('name').touched"></span>
+                <span *ngIf="form.get('name').hasError('minlength')">
+                  Minimum {{form.get('name').errors.minlength.requiredLength}} characters.
+                </span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field>
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="category_id" matTooltip="Select Category" autocomplete="off">
+                  <mat-option *ngFor="let category of (allCategories | async)" [value]="category.id">
+                    {{category.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('category_id').value && form.get('category_id').touched">Choose Category.</span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              &nbsp;&nbsp;
+              <mat-checkbox [checked]="boolIsView" formControlName="is_view">Is View</mat-checkbox>
+              <mat-error>
+                <span *ngIf="!form.get('is_view').value && form.get('is_view').touched"></span>
+                <!-- {{ form.get('is_view').errors | json }} -->
+              </mat-error>
+            </td>
+          </tr>
+          <tr>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="floor" type="number" matTooltip="Enter Floor" matInput placeholder="Floor" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('floor').value && form.get('floor').touched"></span>
+                <span *ngIf="form.get('floor').hasError('min')">Minim is {{ form.get('floor').errors.min.min}}.</span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="no_places" type="number" matTooltip="Enter No Places" matInput placeholder="No Places" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('no_places').value && form.get('no_places').touched"></span>
+                <span *ngIf="form.get('no_places').hasError('min')">Minim is {{ form.get('no_places').errors.min.min}}.</span>
+              </mat-error>
+            </td>
+          </tr>
+          <tr>
+            <td class="tbl1">
+              <!--
+                <mat-form-field class="example-full-width">
+                  <input formControlName="note" matTooltip="Enter Note" matInput placeholder="Note" autocomplete="off">
+                </mat-form-field>
+               -->
+              <mat-form-field appearance="fill">
+                <mat-label>Note</mat-label>
+                <textarea matInput
+                          cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5"
+                          formControlName="note" matTooltip="Enter Note"
+                          placeholder="Note" autocomplete="off"></textarea>
+              </mat-form-field>
+              <!--
+                <mat-form-field appearance="fill">
+                  <mat-label>note</mat-label>
+                  <textarea matInput></textarea>
+                </mat-form-field>
+              -->
+            </td>
+          </tr>
+
+          <tr>
+            <td class="content-center">
+              <button type="submit" mat-raised-button color="accent" matTooltip="Submit" [disabled]="!form.valid">Submit</button>&nbsp;&nbsp;&nbsp;&nbsp;
+              <button type="reset" mat-raised-button color="accent" matTooltip="Reset" (click)="resetForm()">Reset</button>
+            </td>
+            <td>
+              <p *ngIf="dataSaved" style="color:rgb(0, 128, 0);font-size:20px;font-weight:bold" Class="success" align="left">
+                {{massage}}
+              </p>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+        <br><br>
+        <b>Search Records :</b> &nbsp;&nbsp;
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Delete Selected Records :</b> &nbsp;&nbsp;
+        <button mat-button type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="deleteData()">Delete</button>
+
+        <div>
+          <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+              <mat-cell *matCellDef="let room"> {{room.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="is_view">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Is view</mat-header-cell>
+              <mat-cell *matCellDef="let room"> {{room.is_view == 0 ? 'False' : 'True'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="floor">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Floor</mat-header-cell>
+              <mat-cell *matCellDef="let room"> {{room.floor}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="no_places">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>No Places</mat-header-cell>
+              <mat-cell *matCellDef="let room"> {{room.no_places}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="category_name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+              <mat-cell *matCellDef="let room"> {{room.category_name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="edit">
+              <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+              <mat-cell *matCellDef="let room">
+                <button mat-button type="button" mat-raised-button color="accent" matTooltip="Edit" (click)="loadToEdit(room.id)">Edit</button>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+              <mat-cell *matCellDef="let room">
+                <button mat-button type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="delete(room.id)">Delete</button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+<ng-template #loggedOut>You have to login.</ng-template>

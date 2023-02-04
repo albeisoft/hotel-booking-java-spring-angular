@@ -59,7 +59,7 @@ public class CategoryController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    /* */
+
     // method will return no entity so at ResponseEntity will put <?>
     @DeleteMapping("/delete/{id}")
     @Transactional
@@ -67,7 +67,22 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    /*/
+
+    // method will return no entity so at ResponseEntity will put <?>
+    @PostMapping("/deleterecords")
+    @Transactional
+    public ResponseEntity<Category[]> deleteRecords(@RequestBody List<Category> selectedRecordsToDelete) {
+        // check if selectedRecordsToDelete is null
+        if (selectedRecordsToDelete == null)
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
+        //for (Category item : selectedRecordsToDelete) {
+        for (var item : selectedRecordsToDelete) {
+            categoryService.deleteCategory(item.getId());
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     /* * /
     // without ResponseEntity and no status code custom set at return

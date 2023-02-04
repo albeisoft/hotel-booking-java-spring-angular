@@ -24,6 +24,10 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public List <Object> findAllCustom() {
+        return reservationRepository.findAllCustom();
+    }
+
     public Reservation updateReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }

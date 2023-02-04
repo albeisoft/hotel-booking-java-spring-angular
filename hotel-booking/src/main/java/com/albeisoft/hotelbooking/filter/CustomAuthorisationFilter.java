@@ -31,8 +31,8 @@ public class CustomAuthorisationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
-            // let user to login
+        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh") || request.getServletPath().equals("/api/user/save")) {
+            // let user to login, etc.
             filterChain.doFilter(request, response);
         } else {
             // if user is logged, check user authorization, what role(s) have the user

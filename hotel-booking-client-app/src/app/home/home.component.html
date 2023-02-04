@@ -1,0 +1,12 @@
+<div class="container" *ngIf="isLoggedIn; else loggedOut">
+  <mat-card class="mat-elevation-z8">
+    <mat-toolbar color="accent" style="box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);">
+      <div align="center" style="text-align: right;">
+        Home
+      </div>
+    </mat-toolbar>
+    <br><br>
+  </mat-card>
+</div>
+
+<ng-template #loggedOut>You have to login.</ng-template>

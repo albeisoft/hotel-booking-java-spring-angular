@@ -1,0 +1,118 @@
+<div class="container" *ngIf="isLoggedIn; else loggedOut">
+  <mat-card class="mat-elevation-z8">
+    <mat-toolbar color="accent" style="box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);">
+      <div align="center" style="text-align: right;">
+        Category
+      </div>
+    </mat-toolbar>
+    <br><br>
+
+    {{ errorMessage }}
+    <mat-card-content>
+      <form [formGroup]="categoryForm" (ngSubmit)="onFormSubmit()">
+        <table>
+          <tr>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="name" matTooltip="Enter category Name" matInput placeholder="Name" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!categoryForm.get('name').value && categoryForm.get('name').touched"></span>
+                <span *ngIf="categoryForm.get('name').hasError('minlength')">
+                    Minimum {{categoryForm.get('name').errors.minlength.requiredLength}} characters.
+                </span>
+               </mat-error>
+            </td>
+
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <!--<input formControlName="price" matTooltip="Enter Price" matInput placeholder="Price" autocomplete="off"> -->
+                <input formControlName="price" type="number" matTooltip="Enter Price" matInput placeholder="Price" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <!-- // for debug get all errors with Angular json pipe
+                {{categoryForm.get('price').errors | json}} -->
+                <span *ngIf="!categoryForm.get('price').value && categoryForm.get('price').touched"></span>
+                <span *ngIf="categoryForm.get('price').hasError('min')">Minimum value is {{categoryForm.get('price').errors.min.min}}.</span>
+              </mat-error>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="content-center">
+              <button type="submit" mat-raised-button color="accent" matTooltip="Submit" [disabled]="!categoryForm.valid">Submit</button>&nbsp;&nbsp;&nbsp;&nbsp;
+              <button type="reset" mat-raised-button color="accent" matTooltip="Reset" (click)="resetForm()">Reset</button>
+            </td>
+            <td>
+              <p *ngIf="dataSaved" style="color:rgb(0, 128, 0);font-size:20px;font-weight:bold" Class="success" align="left">
+                {{massage}}
+              </p>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+        <br><br>
+
+        <b>Search Records :</b> &nbsp;&nbsp;
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" #input>
+        </mat-form-field>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Delete Selected Records :</b> &nbsp;&nbsp;
+        <button mat-button type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="deleteData()">Delete</button>
+
+        <div>
+          <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+              <mat-cell *matCellDef="let category"> {{category.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
+              <mat-cell *matCellDef="let category"> {{category.price}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="edit">
+              <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+              <mat-cell *matCellDef="let category">
+                <button mat-button type="button" mat-raised-button color="accent" matTooltip="Edit" (click)="loadCategoryToEdit(category.id)">Edit</button>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+              <mat-cell *matCellDef="let category">
+                <button mat-button type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="deleteCategory(category.id)">Delete</button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+</div>
+<ng-template #loggedOut>You have to login.</ng-template>

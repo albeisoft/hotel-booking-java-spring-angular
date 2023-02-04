@@ -24,6 +24,9 @@ public class RoomService {
     public List<Room> findAll() {
        return roomRepository.findAll();
     }
+    public List <Object> findAllCustom() {
+        return roomRepository.findAllCustom();
+    }
 
     public Room updateRoom(Room room) {
         return roomRepository.save(room);

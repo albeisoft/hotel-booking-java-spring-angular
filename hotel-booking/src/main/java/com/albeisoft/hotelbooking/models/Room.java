@@ -48,8 +48,6 @@ public class Room implements Serializable {
     @Range(min=1, max=Integer.MAX_VALUE, message = "Category '${validatedValue}' must be grater or equal with {min}.")
     private Long category_id;
 
-    @NotBlank(message = "Note is required.")
-    @Size(min = 10, max = 255, message = "Note '${validatedValue}' length must be between {min} and {max} characters.")
     private String note;
 
     private Timestamp created_at;

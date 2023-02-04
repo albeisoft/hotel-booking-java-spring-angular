@@ -1,5 +1,6 @@
 package com.albeisoft.hotelbooking.controllers;
 
+import com.albeisoft.hotelbooking.models.Category;
 import com.albeisoft.hotelbooking.models.Client;
 import com.albeisoft.hotelbooking.services.ClientService;
 import org.springframework.http.HttpStatus;
@@ -62,5 +63,20 @@ public class ClientController {
     public ResponseEntity<?> deleteClient(@Valid @PathVariable("id") Long id) {
         clientService.deleteClient(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }   
+    }
+
+    // method will return no entity so at ResponseEntity will put <?>
+    @PostMapping("/deleterecords")
+    @Transactional
+    public ResponseEntity<Client[]> deleteRecords(@RequestBody List<Client> selectedRecordsToDelete) {
+        // check if selectedRecordsToDelete is null
+        if (selectedRecordsToDelete == null)
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
+        for (var item : selectedRecordsToDelete) {
+            clientService.deleteClient(item.getId());
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

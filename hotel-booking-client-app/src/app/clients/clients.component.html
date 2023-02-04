@@ -1,0 +1,160 @@
+<div class="container" *ngIf="isLoggedIn; else loggedOut">
+  <mat-card class="mat-elevation-z8">
+    <mat-toolbar color="accent" style="box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);">
+      <div align="center" style="text-align: right;">
+        Client
+      </div>
+    </mat-toolbar>
+    <br><br>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+        <table>
+          <tr>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="name" matTooltip="Enter Name" matInput placeholder="Name" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <!-- // for debug get all errors with Angular json pipe
+                {{form.get('name').errors | json}}  -->
+                <span *ngIf="!form.get('name').value && form.get('name').touched"></span>
+                <span *ngIf="form.get('name').hasError('minlength')">
+                  Min {{form.get('name').errors.minlength.requiredLength}} characters.
+                </span>
+                <span *ngIf="form.get('name').hasError('pattern')">
+                  Only letters and space.
+                </span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="telephone" matTooltip="Enter Telephone" matInput placeholder="Telephone" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('telephone').value && form.get('telephone').touched"></span>
+                <span *ngIf="form.get('telephone').hasError('pattern')">Need between 10 and 15 digits.</span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="email" matTooltip="Enter Email" matInput placeholder="Email" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('email').value && form.get('email').touched"></span>
+                <span *ngIf="form.get('email').hasError('pattern')">Invalid email.</span>
+              </mat-error>
+            </td>
+          </tr>
+          <tr>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="address" matTooltip="Enter Address" matInput placeholder="Address" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('address').value && form.get('address').touched"></span>
+                <span *ngIf="form.get('address').hasError('minlength')">
+                  Minimum {{form.get('address').errors.minlength.requiredLength}} characters.
+                </span>
+              </mat-error>
+            </td>
+            <td class="tbl1">
+              <mat-form-field class="example-full-width">
+                <input formControlName="identification" matTooltip="Enter Identification" matInput placeholder="Identification" autocomplete="off">
+              </mat-form-field>
+              <mat-error>
+                <span *ngIf="!form.get('identification').value && form.get('identification').touched"></span>
+                <span *ngIf="form.get('identification').hasError('pattern')">
+                  Need to be 15 digits.
+                </span>
+              </mat-error>
+            </td>
+          </tr>
+          <tr>
+            <td class="content-center">
+              <button type="submit" mat-raised-button color="accent" matTooltip="Submit" [disabled]="!form.valid">Submit</button>&nbsp;&nbsp;&nbsp;&nbsp;
+              <button type="reset" mat-raised-button color="accent" matTooltip="Reset" (click)="resetForm()">Reset</button>
+            </td>
+            <td>
+              <p *ngIf="dataSaved" style="color:rgb(0, 128, 0);font-size:20px;font-weight:bold" Class="success" align="left">
+                {{massage}}
+              </p>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+        <br><br>
+        <b>Search Records :</b> &nbsp;&nbsp;
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Delete Selected Records :</b> &nbsp;&nbsp;
+        <button mat-button type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="deleteData()">Delete</button>
+
+        <div>
+          <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+              <mat-cell *matCellDef="let client"> {{client.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="telephone">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Telephone</mat-header-cell>
+              <mat-cell *matCellDef="let client"> {{client.telephone}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+              <mat-cell *matCellDef="let client"> {{client.email}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+              <mat-cell *matCellDef="let client"> {{client.address}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="identification">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Identification</mat-header-cell>
+              <mat-cell *matCellDef="let client"> {{client.identification}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="edit">
+              <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+              <mat-cell *matCellDef="let client">
+                <button mat-button type="button" mat-raised-button color="accent" matTooltip="Edit" (click)="loadToEdit(client.id)">Edit</button>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+              <mat-cell *matCellDef="let client">
+                <button mat-button type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="delete(client.id)">Delete</button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+<ng-template #loggedOut>You have to login.</ng-template>

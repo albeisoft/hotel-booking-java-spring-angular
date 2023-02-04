@@ -2,7 +2,6 @@ package com.albeisoft.hotelbooking.controllers;
 
 import com.albeisoft.hotelbooking.models.User;
 import com.albeisoft.hotelbooking.models.UserRole;
-import com.albeisoft.hotelbooking.services.CategoryService;
 import com.albeisoft.hotelbooking.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -12,24 +11,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+//enable access to all cross origin requests for maxim 1800 seconds (30 minutes) or 3600 seconds (60 minutes)
+//@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials="true")
+//@CrossOrigin(origins = "*", maxAge = 3600)
+
+// by default the @CrossOrigin annotation allows all origin, all headers, the HTTP methods specified in the
+// @RequestMapping annotation and maxAge of 30 min. You can customize the behavior by specifying the corresponding attribute values.
+// @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -43,19 +48,25 @@ public class UserController {
     }
 
     @PostMapping("/user/save")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
+    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
+        if (userService.getUser(user.getUserName()) != null)
+        {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        // todo add default roles to created user
+
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
 
     @PostMapping("/role/save")
-    public ResponseEntity<UserRole> saveRole(@RequestBody UserRole userRole) {
+    public ResponseEntity<UserRole> saveRole(@Valid @RequestBody UserRole userRole) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUserRole(userRole));
     }
 
     @PostMapping("/role/addroletouser")
-    public ResponseEntity<?> addUserRoleToUser(@RequestBody UserRoleToUserForm form) {
+    public ResponseEntity<?> addUserRoleToUser(@Valid @RequestBody UserRoleToUserForm form) {
         userService.addUserRoleToUser(form.getUserName(), form.getUserRoleName());
         return ResponseEntity.ok().build();
     }
@@ -99,6 +110,7 @@ public class UserController {
             throw new RuntimeException("Refresh token missing");
         }
     }
+
 }
 
 @Data

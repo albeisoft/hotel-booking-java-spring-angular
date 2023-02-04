@@ -1,5 +1,6 @@
 package com.albeisoft.hotelbooking.controllers;
 
+import com.albeisoft.hotelbooking.models.Client;
 import com.albeisoft.hotelbooking.models.Reservation;
 import com.albeisoft.hotelbooking.services.ReservationService;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,15 @@ public class ReservationController {
         List<Reservation> reservations = reservationService.findAllReservations();
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
+    /* */
+    @GetMapping("/allcustom")
+    public ResponseEntity<List<Object>> getAllReservationsCustom(){
+        List<Object> reservationsCustom = reservationService.findAllCustom();
+
+        return new ResponseEntity<>(reservationsCustom, HttpStatus.OK);
+    }
+
+
     // set @Valid to show at api response invalid data fields and error messages from model annotations
     @GetMapping("/find/{id}")
     public ResponseEntity<Reservation> getReservationById(@Valid @PathVariable("id") Long id){
@@ -62,5 +72,20 @@ public class ReservationController {
     public ResponseEntity<?> deleteReservation(@Valid @PathVariable("id") Long id) {
         reservationService.deleteReservation(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }   
+    }
+
+    // method will return no entity so at ResponseEntity will put <?>
+    @PostMapping("/deleterecords")
+    @Transactional
+    public ResponseEntity<Reservation[]> deleteRecords(@RequestBody List<Reservation> selectedRecordsToDelete) {
+        // check if selectedRecordsToDelete is null
+        if (selectedRecordsToDelete == null)
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
+        for (var item : selectedRecordsToDelete) {
+            reservationService.deleteReservation(item.getId());
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
