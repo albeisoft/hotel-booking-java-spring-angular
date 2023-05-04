@@ -30,7 +30,7 @@ Then create a database named "hotel_java" and change database autentication data
 
 Run (compile) back end
 
-After run HotelBooking (back end application) in your IDE go to http://localhost:8080 .
+After run HotelBooking (back end application) in your IDE go to http://localhost:8080.
 
 Run (compile) front end scripts
 
