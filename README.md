@@ -28,6 +28,10 @@ Open folder HotelBooking with your IDE: IntelliJ IDEA, Eclipse, NetBeans, Visual
 
 Then create a database named "hotel_java" and change database autentication data in application.properties file from folder hotel-booking-java-spring-angular\hotel-booking\src\main\resources.
 
+Run (compile) back end
+
+After run HotelBooking (back end application) in your IDE go to http://localhost:8080 .
+
 Run (compile) front end scripts
 
 First install node packages with next command in a terminal from hotel-booking-client-app folder:
@@ -38,4 +42,4 @@ To run Angular application go into folder hotel-booking-client-app and run this 
 
 ng serve
 
-Then go to https://localhost:5001/ from your browser and see the web application.
+Then go to http://localhost:5001/ from your browser and see the web application.
